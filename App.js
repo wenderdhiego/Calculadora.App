@@ -1,14 +1,15 @@
 import React from 'react';
 import {useState} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button} from 'react-native';
 
 export default function App() {
   // Mapeamento de teclas
+  
   const buttons = ['LIMPAR', 'DEL', '%', '/', 7, 8, 9, "x", 6, 5, 4, '-', 3, 2, 1, '+', 0, '.', '+/-', '=']
 
   const [currentNumber, setCurrentNumber] = useState("")
   const [lastNumber, setLastNumber] = useState("")
-
+ // const [darkMode, setDarkMode] = useState(false)
 
   function calculator(){
     const splitNumbers = currentNumber.split(' ')
@@ -25,17 +26,20 @@ export default function App() {
         setCurrentNumber((fistNumber - lastNumber).toString())
         return
       case 'x':
-        setCurrentNumber((fistNumber + lastNumber).toString())
+        setCurrentNumber((fistNumber * lastNumber).toString())
         return
       case '/': 
         setCurrentNumber((fistNumber - lastNumber).toString())
         return
+   /*   case '%': 
+        setCurrentNumber(((fistNumber * lastNumber) /100).toString())
+        return*/
     }
   }
 
   function handleInput(buttonPressed){
     console.log(buttonPressed) // Mostra no Console a tecla pressionada
-    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" ){
+    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" | buttonPressed === "%" ){
       setCurrentNumber(currentNumber + " " + buttonPressed + " ")
       return
     }
@@ -58,7 +62,60 @@ export default function App() {
     setCurrentNumber(currentNumber + buttonPressed)
   }
 
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    results: {
+      flex: 2,
+      justifyContent: "center",
+     
+    },
+    resultText: {
+      color: "#282F38",
+      fontSize: 32,
+      fontWeight: "bold",
+      padding: 12,
+      textAlign: "right"
+    },
+  /*
+    themeButton:{
+  
+          backgroundColor: darkMode ? "#7b8084" :"#e5e5e5",
+          alignSelf: 'flex-start',
+          bottom: 120,
+          margin: 15,
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 50,
+          height: 50,
+          borderRadius:25
+      },
+  */
+  
+    historyText:{
+      color: "#7c7c7c",
+      fontSize: 20,
+      marginRight: 10,
+      alignSelf: 'flex-end',
+    },
+    buttons: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    button: {
+      backgroundColor: 'white',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minWidth: 90, 
+      minHeight: 90,
+      flex: 2,
+    },
+    textButton: {
+      color: "#7c7c7c",
+      fontSize: 20,
+    } 
+  });
 
   return (
     
@@ -90,42 +147,3 @@ export default function App() {
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  results: {
-    flex: 2,
-    justifyContent: "center",
-    backgroundColor: "#f5f5f5"
-  },
-  resultText: {
-    color: "#282F38",
-    fontSize: 32,
-    fontWeight: "bold",
-    padding: 12,
-    textAlign: "right"
-  },
-  historyText:{
-    color: "#7c7c7c",
-    fontSize: 20,
-    marginRight: 10,
-    alignSelf: 'flex-end',
-  },
-  buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  button: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 90, 
-    minHeight: 90,
-    flex: 2,
-  },
-  textButton: {
-    color: "#7c7c7c",
-    fontSize: 20,
-  } 
-});
