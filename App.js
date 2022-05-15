@@ -37,9 +37,19 @@ export default function App() {
     }
   }
 
+ 
+     function inverso(currentNumber){
+       
+      currentNumber = currentNumber -1;
+      console.log(currentNumber)
+      console.log('saida de cima')
+      return 
+     }
+
   function handleInput(buttonPressed){
+    
     console.log(buttonPressed) // Mostra no Console a tecla pressionada
-    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" | buttonPressed === "%" ){
+    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" | buttonPressed === "%"){
       setCurrentNumber(currentNumber + " " + buttonPressed + " ")
       return
     }
@@ -56,7 +66,15 @@ export default function App() {
         calculator()
         return
       case '+/-':
-        return
+        let numero; //criei uma variavel
+        if(0 == 0 ){  //condição sempre verdadeira pare entrar no if
+          numero = currentNumber;
+         
+          numero = (numero * (-1));
+         
+          setCurrentNumber(numero)
+        }
+        return 
     }
 
     setCurrentNumber(currentNumber + buttonPressed)
