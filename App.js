@@ -1,14 +1,16 @@
 import React from 'react';
 import {useState} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button, StatusBar, Image} from 'react-native';
 
 export default function App() {
   // Mapeamento de teclas
-  const buttons = ['LIMPAR', 'DEL', '%', '/', 7, 8, 9, "x", 6, 5, 4, '-', 3, 2, 1, '+', 0, '.', '+/-', '=']
+  
+  const buttons = ['LIMPAR', 'DEL', '%', '/', 7, 8, 9, "x", 4, 5, 6, '-', 1, 2, 3, '+','.', 0, '+/-', '=']
 
   const [currentNumber, setCurrentNumber] = useState("")
   const [lastNumber, setLastNumber] = useState("")
-
+  //usado para temas claro e escuro
+  const [darkMode, setDarkMode] = useState(false)
 
   function calculator(){
     const splitNumbers = currentNumber.split(' ')
@@ -25,23 +27,30 @@ export default function App() {
         setCurrentNumber((fistNumber - lastNumber).toString())
         return
       case 'x':
-        setCurrentNumber((fistNumber + lastNumber).toString())
+        setCurrentNumber((fistNumber * lastNumber).toString())
         return
       case '/': 
-        setCurrentNumber((fistNumber - lastNumber).toString())
+        setCurrentNumber((fistNumber / lastNumber).toString())
+        return
+        //operador da porcentagem
+      case '%': 
+        setCurrentNumber(((fistNumber * lastNumber) /100).toString())
         return
     }
   }
 
+
+
   function handleInput(buttonPressed){
+    
     console.log(buttonPressed) // Mostra no Console a tecla pressionada
-    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" ){
+    if(buttonPressed === '+' | buttonPressed === "-" | buttonPressed === "x" | buttonPressed === "/" | buttonPressed === "%"){
       setCurrentNumber(currentNumber + " " + buttonPressed + " ")
       return
     }
     switch(buttonPressed){
       case 'DEL':
-        setCurrentNumber(currentNumber.substring(0, (currentNumber.length - 2)))
+        setCurrentNumber(currentNumber.substring(0, (currentNumber.length - 1)))
         return
       case 'LIMPAR': // Limpa todo o conteúdo
         setLastNumber("") 
@@ -52,80 +61,115 @@ export default function App() {
         calculator()
         return
       case '+/-':
-        return
+        let numero; //criei uma variavel
+        if(0 == 0 ){  //condição sempre verdadeira para entrar no if toda vez que apertar +/-
+          numero = currentNumber;
+         
+          numero = (numero * (-1));
+         
+          setCurrentNumber(numero)
+        }
+        return 
     }
 
     setCurrentNumber(currentNumber + buttonPressed)
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    results: {
+      
+      backgroundColor: darkMode ? "#282f3b" : "#f5f5f5",
+      width: '100%',
+    
+      minHeight: 280,
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end'
+    },
+    resultText: {
+      color: darkMode ? "#f5f5f5" : "#282F38",
+      margin: 10,
+      fontSize: 40
+    },
 
+    historyText:{
+      color: darkMode ? "#B5B7BB" : "#7c7c7c",
+      fontSize: 20,
+      marginRight: 10,
+      alignSelf: 'flex-end',
+    },
+    themeButton: {
+      alignSelf: 'flex-start',
+      bottom: 110,
+      margin: 5,
+      backgroundColor: darkMode ? "#7b8084" : "#e5e5e5",
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      
+    },
+    buttons: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    button: {
+      borderColor: darkMode ? "#4b0082" : "#7b8084",
+      backgroundColor: darkMode ? "#4b0082" : "#e5e5e5",
+      borderWidth: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      minWidth: 90, 
+      minHeight: 58,
+      flex: 1,
+    },
+    imagem:{
+        
+        width: '90%', 
+        height: '90%'
+        
+      },
+    
+
+    textButton: {
+      color: darkMode ? "#7b8084" : "#7c7c7c",
+      fontSize: 20,
+    },
+  });
 
   return (
     
-    <View style={styles.container}>
-
+    <View>
+    <View style={styles.results}>
       {/* Area onde o resultado é exibido */}
-      <View style={styles.results}>
+      <TouchableOpacity style={styles.themeButton} onPress={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
+        <Image style={styles.imagem} source = {require('./src/img/img.png')}></Image>
+      </TouchableOpacity>
         <Text style={styles.historyText}>{lastNumber}</Text>
         <Text style={styles.resultText}>{currentNumber}</Text>
-      </View>
+     </View>
 
       {/* Area onde os botões são exibidos*/}
       <View style={styles.buttons}>
 
         {buttons.map((button) => 
           button === '=' ? // Mapeamento do botão =
-        <TouchableOpacity onPress={() => handleInput(button)} key={button} style={[styles.button, {backgroundColor: '#3dd0e3'}]}>
+        <TouchableOpacity onPress={() => handleInput(button)} key={button} style={[styles.button, {backgroundColor: '#282f3b'}]}>
           <Text style={[styles.textButton, {color: "white", fontSize: 30}]}>{button}</Text>
         </TouchableOpacity>
           : // Mapeamento dos outros botões
           <TouchableOpacity onPress={() => handleInput(button)} key={button} style={styles.button}>
-            <Text style={[styles.textButton, {color: typeof(button) === 'number' ? 'black': '#0093a6'}]}>{button}</Text>
+            <Text style={[styles.textButton, {color: typeof(button) === 'number' ? darkMode === true ? 'white' : 'black': darkMode === true ? 'white' : 'black'}]}>{button}</Text>
           </TouchableOpacity>
         )}
       </View>
     </View>
+
     
   );
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  results: {
-    flex: 2,
-    justifyContent: "center",
-    backgroundColor: "#f5f5f5"
-  },
-  resultText: {
-    color: "#282F38",
-    fontSize: 32,
-    fontWeight: "bold",
-    padding: 12,
-    textAlign: "right"
-  },
-  historyText:{
-    color: "#7c7c7c",
-    fontSize: 20,
-    marginRight: 10,
-    alignSelf: 'flex-end',
-  },
-  buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  button: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 90, 
-    minHeight: 90,
-    flex: 2,
-  },
-  textButton: {
-    color: "#7c7c7c",
-    fontSize: 20,
-  } 
-});
